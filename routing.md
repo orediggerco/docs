@@ -541,12 +541,24 @@ Using the `Route::fallback` method, you may define a route that will be executed
 <a name="defining-rate-limiters"></a>
 ### Defining Rate Limiters
 
-Laravel includes powerful and customizable rate limiting services that you may utilize to restrict the amount of traffic for a given route or group of routes. To get started, you should define rate limiter configurations that meet your application's needs. Typically, this should be done within the `configureRateLimiting` method of your application's `App\Providers\RouteServiceProvider` class.
+Laravel includes powerful and customizable rate limiting services that you may utilize to restrict the amount of traffic for a given route or group of routes. To get started, you should define rate limiter configurations that meet your application's needs. These can be definited in the `boot` method of your application's `App\Providers\RouteServiceProvider` class, or in a `configureRateLimiting` method called from `boot`.
 
 Rate limiters are defined using the `RateLimiter` facade's `for` method. The `for` method accepts a rate limiter name and a closure that returns the limit configuration that should apply to routes that are assigned to the rate limiter. Limit configuration are instances of the `Illuminate\Cache\RateLimiting\Limit` class. This class contains helpful "builder" methods so that you can quickly define your limit. The rate limiter name may be any string you wish:
 
     use Illuminate\Cache\RateLimiting\Limit;
     use Illuminate\Support\Facades\RateLimiter;
+
+    /**
+     * Define your route model bindings, pattern filters, etc.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->configureRateLimiting();
+
+        parent::boot();
+    }
 
     /**
      * Configure the rate limiters for the application.
